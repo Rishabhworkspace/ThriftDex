@@ -20,7 +20,7 @@ export function Hero() {
                         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
                         className="z-20 lg:w-1/2 flex flex-col justify-center pt-4 lg:pt-32"
                     >
-                        <h1 className="font-serif text-6xl font-bold leading-[0.9] tracking-tighter text-theme-text sm:text-8xl lg:text-[10rem] uppercase lg:mix-blend-difference z-30">
+                        <h1 className="font-serif text-6xl font-bold leading-[0.9] tracking-tighter text-theme-dark sm:text-8xl lg:text-[10rem] uppercase lg:mix-blend-difference z-30">
                             The <br /> Archive.
                         </h1>
                         <p className="mt-8 max-w-sm text-sm font-medium uppercase tracking-[0.2em] text-theme-text/80 leading-relaxed pl-2 border-l border-theme-accent">

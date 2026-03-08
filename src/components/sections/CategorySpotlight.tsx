@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { products } from "@/lib/data";
+import { Heart } from "lucide-react";
 
 export function CategorySpotlight() {
     const denimItems = products.filter(p => p.category === "Jackets" || p.tags?.includes("denim")).slice(0, 4);
@@ -21,7 +22,7 @@ export function CategorySpotlight() {
                     <div className="lg:w-1/3 flex flex-col justify-between">
                         <div>
                             <h2 className="text-[10px] font-bold uppercase tracking-[0.3em] text-theme-accent mb-4">Category Spotlight</h2>
-                            <h3 className="font-serif text-5xl font-bold tracking-tighter text-theme-text mb-6">The Denim Archive</h3>
+                            <h3 className="font-serif text-5xl font-bold tracking-tighter text-theme-dark mb-6">The Denim Archive</h3>
                             <p className="text-sm tracking-wide leading-relaxed text-theme-text/70 mb-10">
                                 Faded, distressed, and perfectly broken in. Explore our curated selection of vintage denim jackets and bottoms spanning the last three decades.
                             </p>
@@ -54,7 +55,12 @@ export function CategorySpotlight() {
                         {gridItems.map((item) => (
                             <div key={item.id} className="group flex flex-col relative">
                                 <Link href={`/product/${item.id}`} className="absolute inset-0 z-10" />
-                                <div className="relative aspect-[3/4] w-full overflow-hidden bg-theme-dark/5">
+                                <div className="relative aspect-[3/4] w-full overflow-hidden bg-theme-dark/5 border-none">
+                                    <div className="absolute right-3 top-3 z-30 opacity-70 hover:opacity-100 transition-opacity">
+                                        <button aria-label="Add to wishlist" className="p-1">
+                                            <Heart className="w-5 h-5 text-theme-base lg:text-theme-text" strokeWidth={1.5} />
+                                        </button>
+                                    </div>
                                     <Image
                                         src={item.image}
                                         alt={item.name}
@@ -63,9 +69,9 @@ export function CategorySpotlight() {
                                         sizes="(min-width: 1024px) 30vw, 50vw"
                                     />
                                 </div>
-                                <div className="mt-4 sm:mt-6">
-                                    <h4 className="font-serif text-sm sm:text-xl font-bold text-theme-text line-clamp-2">{item.name}</h4>
-                                    <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-theme-text/60">₹{item.price}</p>
+                                <div className="mt-4 flex flex-col items-start text-left">
+                                    <h4 className="text-xs sm:text-sm font-bold text-theme-text group-hover:text-theme-accent transition-colors line-clamp-1 mb-1">{item.name}</h4>
+                                    <p className="text-[11px] sm:text-xs text-theme-text/80">₹{item.price}</p>
                                 </div>
                             </div>
                         ))}

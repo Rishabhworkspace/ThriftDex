@@ -28,7 +28,7 @@ export function BottomNav() {
                             className={`flex flex-col items-center justify-center w-full h-full gap-1 active:scale-95 transition-transform ${isActive ? "text-theme-dark" : "text-theme-text/50"}`}
                         >
                             <div className="relative">
-                                <Icon strokeWidth={isActive ? 2 : 1.5} className="h-6 w-6" />
+                                <Icon strokeWidth={1.5} fill={isActive ? "currentColor" : "none"} className="h-[22px] w-[22px]" />
                                 {item.label === "Cart" && (
                                     <span className="absolute -top-1.5 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-theme-accent text-[9px] font-bold text-theme-base">
                                         0
