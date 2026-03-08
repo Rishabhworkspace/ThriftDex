@@ -35,7 +35,9 @@ export function CategorySpotlight() {
                         </div>
 
                         <div className="mt-12 lg:mt-16 relative aspect-square sm:aspect-[4/5] w-full block overflow-hidden group">
-                            <Link href={`/product/${showcaseItem.id}`} className="absolute inset-0 z-10" />
+                            <Link href={`/product/${showcaseItem.id}`} className="absolute inset-0 z-10">
+                                <span className="sr-only">View {showcaseItem.name}</span>
+                            </Link>
                             <Image
                                 src={showcaseItem.image}
                                 alt={showcaseItem.name}

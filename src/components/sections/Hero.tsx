@@ -56,6 +56,7 @@ export function Hero() {
                                     fill
                                     className="object-cover transition-transform duration-[2000ms] hover:scale-105"
                                     priority
+                                    sizes="(min-width: 1024px) 40vw, 75vw"
                                 />
                             </div>
                         </motion.div>
@@ -74,6 +75,7 @@ export function Hero() {
                                     fill
                                     className="object-cover transition-transform duration-[2000ms] hover:scale-105"
                                     priority
+                                    sizes="(min-width: 1024px) 25vw, 50vw"
                                 />
                             </div>
                         </motion.div>
@@ -91,7 +93,7 @@ export function Hero() {
                                     alt="Background Texture"
                                     fill
                                     className="object-cover"
-                                    priority
+                                    sizes="(min-width: 1024px) 20vw, 40vw"
                                 />
                             </div>
                         </motion.div>

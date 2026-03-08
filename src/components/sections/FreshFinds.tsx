@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { products } from "@/lib/data";
@@ -12,7 +12,7 @@ export function FreshFinds() {
 
     const filters = ["ALL", "SHIRTS", "OUTERWEAR", "DENIM & BOTTOMS", "SWEATS"];
 
-    const filteredArrivals = products
+    const filteredArrivals = useMemo(() => products
         .filter((p) => p.isNew)
         .filter((p) => {
             if (activeFilter === "ALL") return true;
@@ -22,7 +22,7 @@ export function FreshFinds() {
             if (activeFilter === "SWEATS") return p.category === "Hoodies" || p.category === "Sweatshirts";
             return true;
         })
-        .slice(0, 8);
+        .slice(0, 8), [activeFilter]);
 
     return (
         <section id="fresh-finds" className="bg-theme-base py-24">

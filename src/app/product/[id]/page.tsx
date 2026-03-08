@@ -1,11 +1,25 @@
-"use client";
-
-import Image from "next/image";
+import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { products } from "@/lib/data";
 import { ChevronLeft, ShieldCheck, Truck, Lock } from "lucide-react";
-import { useState } from "react";
+import { ProductGallery } from "@/components/product/ProductGallery";
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+    const product = products.find((p) => p.id === params.id);
+    if (!product) {
+        return { title: 'Product Not Found' };
+    }
+    return {
+        title: product.name,
+        description: `Buy ${product.name} by ${product.brand}. ${product.condition} condition. Authentic vintage and streetwear curated by ThriftDex.`,
+        openGraph: {
+            title: `${product.name} | ThriftDex`,
+            description: `Buy ${product.name} by ${product.brand}. ${product.condition} condition.`,
+            images: [{ url: product.image, width: 800, height: 1000, alt: product.name }],
+        },
+    };
+}
 
 export default function ProductPage({ params }: { params: { id: string } }) {
     const product = products.find((p) => p.id === params.id);
@@ -14,19 +28,36 @@ export default function ProductPage({ params }: { params: { id: string } }) {
         notFound();
     }
 
-    const [activeImage, setActiveImage] = useState(product.gallery[0]);
-    const [currentSlide, setCurrentSlide] = useState(0);
-
-    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-        const { scrollLeft, clientWidth } = e.currentTarget;
-        const slideIndex = Math.round(scrollLeft / clientWidth);
-        if (slideIndex !== currentSlide) {
-            setCurrentSlide(slideIndex);
+    const productSchema = {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": product.name,
+        "image": [
+            `https://thriftdex.com${product.image}`
+        ],
+        "description": `Buy ${product.name} by ${product.brand}. ${product.condition} condition. Authentic vintage and streetwear.`,
+        "sku": product.id,
+        "brand": {
+            "@type": "Brand",
+            "name": product.brand
+        },
+        "offers": {
+            "@type": "Offer",
+            "url": `https://thriftdex.com/product/${product.id}`,
+            "priceCurrency": "INR",
+            "price": product.price,
+            "itemCondition": "https://schema.org/UsedCondition",
+            "availability": "https://schema.org/InStock"
         }
     };
 
+
     return (
         <div className="bg-theme-base min-h-screen py-12 md:py-24 pb-48 md:pb-24">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+            />
             <div className="container mx-auto px-4 sm:px-6 lg:px-12">
 
                 {/* Breadcrumb */}
@@ -39,69 +70,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                 </Link>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
-
-                    {/* Desktop Gallery */}
-                    <div className="hidden lg:flex flex-col gap-6 sticky top-24">
-                        <div className="relative aspect-[3/4] w-full overflow-hidden bg-theme-dark/5 border border-theme-dark/10">
-                            {product.isRare && (
-                                <div className="absolute top-4 left-4 z-20 bg-theme-base px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-theme-accent shadow-sm border border-theme-dark/10">
-                                    Rare Archive
-                                </div>
-                            )}
-                            <Image
-                                src={activeImage}
-                                alt={product.name}
-                                fill
-                                priority
-                                className="object-cover"
-                                sizes="(min-width: 1024px) 50vw, 100vw"
-                            />
-                        </div>
-
-                        {product.gallery.length > 1 && (
-                            <div className="grid grid-cols-4 gap-4">
-                                {product.gallery.map((img, idx) => (
-                                    <button
-                                        key={idx}
-                                        onClick={() => setActiveImage(img)}
-                                        className={`relative aspect-[3/4] overflow-hidden border ${activeImage === img ? 'border-theme-text' : 'border-transparent opacity-60 hover:opacity-100'} transition bg-theme-dark/5`}
-                                    >
-                                        <Image src={img} alt={`${product.name} detail`} fill className="object-cover" />
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Mobile Snap Carousel */}
-                    <div className="lg:hidden w-full relative -mx-4 sm:-mx-6 px-4 sm:px-6 mb-8 flex flex-col gap-4">
-                        <div
-                            className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 pb-4"
-                            onScroll={handleScroll}
-                        >
-                            {product.gallery.map((img, idx) => (
-                                <div key={idx} className="w-[85vw] sm:w-[70vw] flex-none snap-center relative aspect-[3/4] overflow-hidden bg-theme-dark/5 border border-theme-dark/10">
-                                    {product.isRare && idx === 0 && (
-                                        <div className="absolute top-4 left-4 z-20 bg-theme-base px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-theme-accent shadow-sm border border-theme-dark/10">
-                                            Rare Archive
-                                        </div>
-                                    )}
-                                    <Image src={img} alt={`${product.name} - View ${idx + 1}`} fill priority={idx === 0} className="object-cover" sizes="85vw" />
-                                </div>
-                            ))}
-                        </div>
-                        {/* Pagination Dots */}
-                        {product.gallery.length > 1 && (
-                            <div className="flex justify-center items-center gap-2">
-                                {product.gallery.map((_, idx) => (
-                                    <div
-                                        key={idx}
-                                        className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentSlide ? 'w-6 bg-theme-text' : 'w-1.5 bg-theme-text/20'}`}
-                                    />
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                    <ProductGallery product={product} />
 
                     {/* Details */}
                     <div className="flex flex-col lg:py-10">
